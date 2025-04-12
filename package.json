@@ -16,6 +16,7 @@
     "discord.js": "^14.18.0",
     "distube": "^5.0.7",
     "mysql2": "^3.14.0",
+    "sequelize": "^6.37.7",
     "winston": "^3.17.0"
   },
   "devDependencies": {

@@ -20,6 +20,18 @@ export default {
     ),
   async execute(interaction) {
     try {
+      const member = interaction.member;
+      const highestRole = member.roles.highest;
+
+      // todo: Implementar un sistema para almacenar la configuracion de los roles que asgino el confi del bot
+      if(!highestRole.name.includes("Moderador") && !highestRole.name.includes("Admin")) {
+        await interaction.reply({
+          content: "No tienes permisos para usar este comando.",
+          ephemeral: true,
+        });
+        return;
+      }
+
       const channel = interaction.options.getChannel("canal"); // Canal al que se enviará el mensaje
       const message = interaction.options.getString("mensaje"); // Mensaje a enviar
 
