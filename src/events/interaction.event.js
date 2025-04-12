@@ -16,11 +16,11 @@ cliente.on(Events.InteractionCreate, async interaction => {
         await command.execute(interaction);
     } catch (error) {
         console.error(error);
-        logger.error(`Error executing command ${interaction.commandName}: ${error}`);
+        logger.error(`Error al ejecutar el comando ${interaction.commandName} por ${interaction.user.tag} en el servidor ${interaction.guild.name}`);
         if (interaction.replied || interaction.deferred) {
-            await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.editReply({ content: 'Hubo un error al ejecutar este comando!', ephemeral: true });
         } else {
-            await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            await interaction.reply({ content: 'Hubo un error al ejecutar este comando!', ephemeral: true });
         }
     }
 });
