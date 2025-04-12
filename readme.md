@@ -22,7 +22,7 @@ TemplateBot es un proyecto de código libre diseñado para servir como base para
    ```bash
    git clone <url-del-repositorio>
    cd templateBot
-
+```bash
 src/
 ├── [app.js](http://_vscodecontentref_/0)                 # Archivo principal del bot
 ├── commands/              # Comandos de barra
