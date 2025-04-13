@@ -38,13 +38,16 @@ export default {
           .setFooter({ text: `Request made by >>${interaction.user.tag}<<` })
           .setTimestamp();
 
-          embeds.push(embed);
-
+        embeds.push(embed);
       }
       // Edit the deferred reply with the result
+      logger.info(
+        `Chat command executed by ${interaction.user.tag} in ${interaction.guild.name}`
+      );
       await interaction.editReply({ embeds });
     } catch (error) {
       console.error(error);
+      logger.error(`Error in chat command: ${error.message}`);
       await interaction.editReply({
         content: "❌ Ocurrió un error al procesar tu solicitud.",
       });
