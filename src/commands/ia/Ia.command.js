@@ -14,33 +14,40 @@ export default {
     ),
   async execute(interaction) {
     if (!interaction.inGuild()) {
-        return await interaction.reply({
-            content: "❌ Este comando solo puede usarse dentro de un servidor.",
-            ephemeral: true,
-        });
+      return await interaction.reply({
+        content: "❌ Este comando solo puede usarse dentro de un servidor.",
+        ephemeral: true,
+      });
     }
 
     // Defer the reply to avoid timeout issues
     await interaction.deferReply();
 
     try {
-        const prompt = interaction.options.getString("prompt");
-        const ia = await chatIAService.initChat(prompt);
+      const prompt = interaction.options.getString("prompt");
+      const ia = await chatIAService.initChat(prompt);
 
-        const embedIA = new EmbedBuilder()
-            .setColor(3447003)
-            .setTitle("Template IA")
-            .setDescription(ia)
-            .setFooter({ text: `Request made by >>${interaction.user.tag}<<` })
-            .setTimestamp();
+      const embeds = [];
+      const chunkSize = 4096; // Discord message limit
 
-        // Edit the deferred reply with the result
-        await interaction.editReply({ embeds: [embedIA] });
+      for (let i = 0; i < ia.length; i += chunkSize) {
+        const embed = new EmbedBuilder()
+          .setColor(3447003)
+          .setTitle(i === 0 ? "Template IA" : null)
+          .setDescription(ia.slice(i, i + chunkSize))
+          .setFooter({ text: `Request made by >>${interaction.user.tag}<<` })
+          .setTimestamp();
+
+          embeds.push(embed);
+
+      }
+      // Edit the deferred reply with the result
+      await interaction.editReply({ embeds });
     } catch (error) {
-        console.error(error);
-        await interaction.editReply({
-            content: "❌ Ocurrió un error al procesar tu solicitud.",
-        });
+      console.error(error);
+      await interaction.editReply({
+        content: "❌ Ocurrió un error al procesar tu solicitud.",
+      });
     }
   },
 };
