@@ -10,4 +10,5 @@ export default {
     DB_PASS: process.env.DB_PASS,
     DB_HOST: process.env.DB_HOST,
     DB_PORT: process.env.DB_PORT,
+    KEY_MISTRAL: process.env.KEY_MISTRAL,
 }
