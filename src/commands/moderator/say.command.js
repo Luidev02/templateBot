@@ -24,7 +24,7 @@ export default {
       const highestRole = member.roles.highest;
 
       // todo: Implementar un sistema para almacenar la configuracion de los roles que asgino el confi del bot
-      if(!highestRole.name.includes("Moderador") && !highestRole.name.includes("Admin")) {
+      if(!highestRole.name.includes("io") && !highestRole.name.includes("mod")) {
         await interaction.reply({
           content: "No tienes permisos para usar este comando.",
           ephemeral: true,
