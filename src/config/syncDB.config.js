@@ -2,10 +2,10 @@ import logger from "../utils/logger.util.js";
 import sequelize from "./sequelize.config.js";
 
 const configDB = {
-  async syncDatabase() {
+  async sync() {
     try {
       await sequelize.sync({ alter: true });
-      logger.error("Base de datos sincronizada correctamente");
+      logger.info("Base de datos sincronizada correctamente");
     } catch (error) {
       logger.error("Error al sincronizar la base de datos:", error);
     }

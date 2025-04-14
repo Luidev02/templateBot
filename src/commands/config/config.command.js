@@ -1,21 +1,39 @@
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder, ChannelType, EmbedBuilder } from "discord.js";
 import logger from "../../utils/logger.util.js";
+import joinPlayerCommand from "../../services/configCommand/join.service.js";
 
 export default {
   data: new SlashCommandBuilder()
     .setName("config")
     .setDescription("Comando de configuración")
-    .addStringOption((option) =>
-      option
-        .setName("command")
-        .setDescription("El comando que quieres ejecutar") // Ya no es obligatorio
+    .addSubcommand((sub) =>
+      sub
+        .setName("ping")
+        .setDescription("Ver el ping del bot")
+    )
+    .addSubcommand((sub) =>
+      sub
+        .setName("join")
+        .setDescription("Configurar el canal de bienvenida")
+        .addChannelOption((option) =>
+          option
+            .setName("canal")
+            .setDescription("Canal donde se enviará el mensaje de bienvenida")
+            .setRequired(true)
+            .addChannelTypes(ChannelType.GuildText) // solo canales de texto
+        )
+    )
+    .addSubcommand((sub) =>
+      sub
+        .setName("leave")
+        .setDescription("Hacer que el bot deje el servidor (opcional)")
     ),
 
   async execute(interaction) {
-    const command = interaction.options.getString("command")?.toLowerCase(); // Maneja undefined
+    const subcommand = interaction.options.getSubcommand();
     let embed;
 
-    switch (command) {
+    switch (subcommand) {
       case "ping":
         embed = new EmbedBuilder()
           .setColor(3447003)
@@ -25,14 +43,11 @@ export default {
           .setTimestamp();
         break;
 
-      case "join":
-        embed = new EmbedBuilder()
-          .setColor(3447003)
-          .setTitle("🔗 Join")
-          .setDescription("Aquí iría el link para invitar al bot o lógica relacionada.")
-          .setFooter({ text: `Request made by >>${interaction.user.tag}<<` })
-          .setTimestamp();
+      case "join": {
+        const canal = interaction.options.getChannel("canal");
+        embed = await joinPlayerCommand(interaction, canal);
         break;
+      }
 
       case "leave":
         embed = new EmbedBuilder()
@@ -47,13 +62,7 @@ export default {
         embed = new EmbedBuilder()
           .setColor(3447003)
           .setTitle("⚙️ Comandos de Configuración")
-          .setDescription("Los comandos disponibles son:")
-          .addFields(
-            { name: "`ping`", value: "Devuelve el ping del bot" },
-            { name: "`join`", value: "Invita al bot o muestra información de ingreso" },
-            { name: "`leave`", value: "Lógica para que el bot se retire del servidor" }
-          )
-          .setFooter({ text: `Request made by >>${interaction.user.tag}<<` })
+          .setDescription("Usa uno de los subcomandos disponibles.")
           .setTimestamp();
         break;
     }
@@ -61,7 +70,7 @@ export default {
     await interaction.reply({ embeds: [embed] });
 
     logger.info(
-      `Config command "${command || "list"}" executed by ${interaction.user.tag} in guild ${
+      `Subcommand "${subcommand}" executed by ${interaction.user.tag} in guild ${
         interaction.guild?.name || "DM"
       }`
     );

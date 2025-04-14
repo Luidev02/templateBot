@@ -1,6 +1,6 @@
 import sequelize from "../config/sequelize.config.js";
 
-const config = sequelize.define("config", {
+const Config = sequelize.define("Config", {
     id: {
         type: sequelize.INTEGER,
         primaryKey: true,
@@ -23,4 +23,4 @@ const config = sequelize.define("config", {
 })
 
 
-export default config;
+export default Config;

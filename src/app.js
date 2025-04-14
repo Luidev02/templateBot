@@ -13,6 +13,7 @@ import './events/interaction.event.js'
 
 await loadCommands(); // Carga los comandos antes de que el bot esté listo
 configDB.init(); // Inicializa la conexión a la base de datos
+configDB.sync(); // Sincroniza la base de datos
 
 
 cliente.once(Events.ClientReady, (readyBot) => {
